@@ -8,7 +8,6 @@ namespace API.DTOs.Movie
 {
     public class UpdateMovieDTO
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(255)]
         public required string MovieName { get; set; }
