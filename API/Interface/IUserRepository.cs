@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs.User;
 using API.Helpers;
-using API.Models;
+using API.Domain.Models;
 
 namespace API.Interface
 {

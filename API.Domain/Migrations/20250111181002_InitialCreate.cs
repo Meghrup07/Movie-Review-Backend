@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace API.Migrations
+namespace API.Domain.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -36,8 +36,8 @@ namespace API.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Role = table.Column<string>(type: "TEXT", nullable: false),
-                    passwordHash = table.Column<byte[]>(type: "BLOB", nullable: false),
-                    passwordSalt = table.Column<byte[]>(type: "BLOB", nullable: false)
+                    PasswordHash = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "BLOB", nullable: false)
                 },
                 constraints: table =>
                 {

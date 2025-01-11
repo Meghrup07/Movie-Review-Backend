@@ -4,11 +4,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using API.Data;
+using API.Domain;
 using API.DTOs.User;
 using API.Helpers;
 using API.Interface;
-using API.Models;
+using API.Domain.Models;
 using API.Response;
 using API.Services;
 using AutoMapper;
@@ -32,8 +32,8 @@ namespace API.Controllers
 
             var user = mapper.Map<AppUser>(registerDTO);
 
-            user.passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
-            user.passwordSalt = hmac.Key;
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDTO.Password));
+            user.PasswordSalt = hmac.Key;
 
             await context.AddAsync(user);
             await context.SaveChangesAsync();
@@ -59,13 +59,13 @@ namespace API.Controllers
 
             if (user == null) return Unauthorized("Invalid username");
 
-            using var hmac = new HMACSHA512(user.passwordSalt);
+            using var hmac = new HMACSHA512(user.PasswordSalt);
 
             var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
 
             for (int i = 0; i < computeHash.Length; i++)
             {
-                if (computeHash[i] != user.passwordHash[i]) return Unauthorized("Invalid password");
+                if (computeHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
             }
 
             return new UserDTO

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.Models
+namespace API.Domain.Models
 {
     public class AppUser
     {
@@ -20,9 +20,9 @@ namespace API.Models
         [Required]
         public required string Role { get; set; }
         [Required]
-        public required byte[] passwordHash { get; set; }
+        public required byte[] PasswordHash { get; set; }
         [Required]
-        public required byte[] passwordSalt { get; set; }
+        public required byte[] PasswordSalt { get; set; }
         public List<MovieReview> Reviews { get; set; } = [];
     }
 }

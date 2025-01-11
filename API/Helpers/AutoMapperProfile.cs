@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using API.DTOs.Movie;
 using API.DTOs.MovieReview;
 using API.DTOs.User;
-using API.Models;
+using API.Domain.Models;
 using AutoMapper;
 
 namespace API.Helpers

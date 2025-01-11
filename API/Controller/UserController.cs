@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using API.DTOs.User;
 using API.Helpers;
 using API.Interface;
-using API.Models;
+using API.Domain;
 using API.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using API.Domain.Models;
 
 namespace API.Controller
 {
