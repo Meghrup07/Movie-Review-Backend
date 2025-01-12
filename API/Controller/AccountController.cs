@@ -5,20 +5,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using API.Domain;
-using API.DTOs.User;
-using API.Helpers;
-using API.Interface;
 using API.Domain.Models;
-using API.Response;
-using API.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using API.Contracts.User;
+using API.Services.Interfaces;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class AccountController(DataContext context, IMapper mapper, ITokenService tokenService) : ControllerBase
     {
         [HttpPost("register")]
@@ -27,6 +24,8 @@ namespace API.Controllers
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO registerDTO)
         {
             if (await UserNameExists(registerDTO.UserName)) return BadRequest("UserName is taken");
+
+            if (await EmailExists(registerDTO.Email)) return BadRequest("Email is taken");
 
             using var hmac = new HMACSHA512();
 
@@ -55,7 +54,7 @@ namespace API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO)
         {
-            var user = await context.users.Where(u => u.UserName == loginDTO.UserName).FirstOrDefaultAsync();
+            var user = await context.Users.Where(u => u.Email == loginDTO.Email).FirstOrDefaultAsync();
 
             if (user == null) return Unauthorized("Invalid username");
 
@@ -81,7 +80,12 @@ namespace API.Controllers
         }
         private async Task<bool> UserNameExists(string userName)
         {
-            return await context.users.AnyAsync(u => u.UserName == userName);
+            return await context.Users.AnyAsync(u => u.UserName == userName);
+        }
+
+        private async Task<bool> EmailExists(string email)
+        {
+            return await context.Users.AnyAsync(u => u.Email == email);
         }
     }
 }

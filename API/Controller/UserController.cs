@@ -2,63 +2,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.DTOs.User;
-using API.Helpers;
-using API.Interface;
-using API.Domain;
-using API.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using API.Domain.Models;
+using API.Services.Interfaces;
+using API.Comman;
+using API.Contracts.User;
 
 namespace API.Controller
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ApiController]
-    [Route("api/[controller]")]
-    public class UserController(IUserRepository userRepository) : ControllerBase
+    [Route("api/user")]
+    public class UserController(IServiceManager serviceManager) : ControllerBase
     {
-        [HttpGet("get/users")]
+        [HttpGet("list")]
         [ProducesResponseType(typeof(UserDetailsDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PaginationResponse<UserDetailsDTO>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var users = await userRepository.GetAsync(userParams);
-
-            var response = new PaginationResponse<UserDetailsDTO>
+            try
             {
-                Items = users,
-                TotalCount = users.Count
-            };
-
-            return Ok(response);
+                var users = await serviceManager.UserService.GetAsync(userParams);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        [HttpGet("get/users/{id:int}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(UserDetailsDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AppUser>> GetUser([FromRoute] int id)
         {
-            var user = await userRepository.GetByIdAsync(id);
-
-            if (user == null) return NotFound("User Not Found!");
-
-            return Ok(user);
+            try
+            {
+                var user = await serviceManager.UserService.GetByIdAsync(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex);
+            }
         }
 
-        [HttpDelete("delete/users")]
+        [HttpDelete("delete")]
         [ProducesResponseType(typeof(UserDetailsDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AppUser>> DeleteUser([FromRoute] int id)
         {
-            var user = await userRepository.GetByIdAsync(id);
+            try
+            {
+                var user = await serviceManager.UserService.DeleteAsync(id);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex);
 
-            if (user == null) return NotFound("User Not Found!");
-
-            await userRepository.DeleteAsync(user);
-
-            await userRepository.SaveChangesAsync();
-
-            return Ok(user);
+            }
         }
     }
 }

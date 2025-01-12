@@ -24,7 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\API.Comman\API.Comman.csproj" />
+    <ProjectReference Include="..\API.Contracts\API.Contracts.csproj" />
     <ProjectReference Include="..\API.Domain\API.Domain.csproj" />
+    <ProjectReference Include="..\API.Infrastructure\API.Infrastructure.csproj" />
+    <ProjectReference Include="..\API.Services\API.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,20 +1,19 @@
+﻿using API.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using API.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Domain
 {
-    public class DataContext:DbContext
+    public class DataContext: DbContext
     {
-        public DataContext(DbContextOptions options) : base(options)
-        {
+        public DataContext(DbContextOptions options): base(options) { }
 
-        }
-        public DbSet<AppUser> users { get; set; }
-        public DbSet<Movie> movies { get; set; }
-        public DbSet<MovieReview> movieReviews { get; set; }
+        public DbSet<AppUser> Users { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieReview> MovieReviews { get; set; }
     }
 }
